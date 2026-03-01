@@ -1,0 +1,9 @@
+{
+  "name": "write-test",
+  "version": "1.0.0",
+  "description": "Custom skill for writing comprehensive Jest tests for React components with my preferred approach and best practices",
+  "author": {
+    "name": "Grzegorz Grablewski",
+    "email": "ggrablewski@wp.pl"
+  }
+}

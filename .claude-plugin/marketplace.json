@@ -1,0 +1,23 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "gg-marketplace",
+  "description": "My collection of Claude Code plugins with custom skills for programming",
+  "owner": {
+    "name": "Grzegorz Grablewski",
+    "email": "ggrablewski@wp.pl"
+  },
+  "plugins": [
+    {
+      "name": "write-test",
+      "description": "Custom skill for writing comprehensive Jest tests for React components with my preferred approach and best practices",
+      "version": "1.0.0",
+      "author": {
+        "name": "Grzegorz Grablewski",
+        "email": "ggrablewski@wp.pl"
+      },
+      "source": "./plugins/react-write-test",
+      "category": "testing",
+      "tags": ["react", "testing", "jest", "react-native"]
+    }
+  ]
+}
