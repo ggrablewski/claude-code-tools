@@ -1,19 +1,35 @@
 # claude-code-tools
+
 Various tools supporting the use of Claude Code
 
-## gg-marketplace Files
+## Contents
 
-My marketplace to store my self-defined plugins with specific skills
+### 1. gg-marketplace - Custom Plugins and Skills
 
-### Marketplace Configuration
+My marketplace to store self-defined plugins with specific skills for programming.
+
+**Marketplace Configuration:**
 - **`.claude-plugin/marketplace.json`** - Defines the marketplace and lists available plugins
 
-### Example Plugin: write-test
-- **`plugins/react-js/write-test/plugin.json`** - Plugin manifest
-- **`plugins/react-js/write-test/skills/write-test/SKILL.md`** - Skill definition - with testing preferences
+**Available Plugins:**
+- **write-test** - Custom skill for writing Jest tests for React/React Native components
+  - Location: `plugins/react-write-test/`
+  - Includes testing best practices and preferred approach
 
-### Documentation
-- **`SETUP_INSTRUCTIONS.md`** - Complete guide for adding these files to GitHub and using the marketplace
+**Documentation:**
+- **`SETUP_INSTRUCTIONS.md`** - Complete guide for setting up and using the marketplace
+
+### 2. Coding Rules
+
+**Location:** `rules/`
+
+Collection of coding rules and best practices for various technologies:
+- **`typescript-testing.md`** - Comprehensive testing rules for TypeScript with Jest
+  - Given-When-Then pattern
+  - Test organization and naming
+  - Mock management
+  - Type safety in tests
+  - And more...
 
 ## Quick Start
 
@@ -25,18 +41,24 @@ My marketplace to store my self-defined plugins with specific skills
 
 See [SETUP_INSTRUCTIONS.md](SETUP_INSTRUCTIONS.md) for detailed steps.
 
-## File Structure to Copy
+## Repository Structure
 
 ```
-.claude-plugin/
-  marketplace.json
-plugins/
-  react-js/
-    write-test/
-      plugin.json
-      skills/
-        write-test/
-          SKILL.md
+claude-code-tools/
+├── .claude-plugin/
+│   └── marketplace.json           # Marketplace manifest
+├── plugins/
+│   └── react-write-test/          # React testing plugin
+│       ├── .claude-plugin/
+│       │   └── plugin.json
+│       └── skills/
+│           └── write-test/
+│               └── SKILL.md
+├── rules/
+│   ├── README.md
+│   └── typescript-testing.md      # TypeScript testing rules
+├── README.md
+└── SETUP_INSTRUCTIONS.md
 ```
 
 ## Marketplace Details
