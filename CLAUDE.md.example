@@ -1,0 +1,126 @@
+# Project Guidelines
+
+> This is an example CLAUDE.md file that references rules from gg-marketplace.
+> Copy this file to your project root and rename to `CLAUDE.md` to use it.
+
+## Project Overview
+
+[Add brief description of your project here]
+
+## Testing Guidelines
+
+### TypeScript Testing Rules
+
+**IMPORTANT:** Follow the comprehensive TypeScript testing rules from gg-marketplace:
+
+📖 **Full Documentation:** https://github.com/ggrablewski/claude-code-tools/blob/main/rules/typescript-testing.md
+
+### Key Testing Requirements (MANDATORY)
+
+#### 1. Test Organization
+- **Group related tests** in `describe` blocks by functionality
+- **One test case per `it` block** - test exactly one behavior
+
+#### 2. Test Structure - Given-When-Then Pattern
+**EVERY test MUST include these comments:**
+
+```typescript
+it('should do something when condition is met', () => {
+  // given
+  // [Setup test data, mocks, and preconditions]
+
+  // when
+  // [Execute the action being tested]
+
+  // then
+  // [Assert the expected outcomes]
+});
+```
+
+#### 3. Setup and Teardown
+- **ALL mocks and test data** must be initialized in `beforeEach`
+- **Clean up mocks** in `afterEach` using `jest.clearAllMocks()`
+
+```typescript
+describe('MyService', () => {
+  let service: MyService;
+  let mockDependency: jest.Mocked<Dependency>;
+
+  beforeEach(() => {
+    // Initialize all mocks and test objects here
+    mockDependency = {
+      method: jest.fn(),
+    } as jest.Mocked<Dependency>;
+
+    service = new MyService(mockDependency);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  // tests...
+});
+```
+
+#### 4. Test Naming
+Format: `should [expected behavior] when [condition]`
+
+✅ Good:
+- `should return user data when user exists`
+- `should throw ValidationError when email is invalid`
+
+❌ Bad:
+- `works`
+- `test user`
+
+#### 5. Type Safety
+- Use proper TypeScript types for all test data
+- Type your mocks: `jest.Mocked<YourType>`
+- Type function parameters and return values
+
+#### 6. Async Testing
+- Always use `async/await` for asynchronous operations
+- Use `mockResolvedValue()` and `mockRejectedValue()` for promises
+
+### Quick Checklist
+
+Before committing tests, verify:
+
+- [ ] Each functionality has its own `describe` block
+- [ ] Each test case has its own `it` block
+- [ ] Setup is in `beforeEach`, cleanup in `afterEach`
+- [ ] Every test has `// Given`, `// When`, `// Then` comments
+- [ ] Test names follow `should [behavior] when [condition]` format
+- [ ] Mocks are properly typed and cleaned up
+- [ ] Async operations use `async/await`
+- [ ] Tests are isolated and independent
+
+## Skills Configuration
+
+### Active Skills from gg-marketplace
+
+**write-test** - Use for creating comprehensive Jest tests with my preferred approach
+- Automatically applies TypeScript testing rules
+- Includes Given-When-Then pattern
+- Handles test organization and mock setup
+
+To invoke: `/write-test` or just ask "write tests for [component]"
+
+## Code Style
+
+[Add your code style guidelines here]
+
+## Architecture
+
+[Add your architecture guidelines here]
+
+## Additional Resources
+
+- TypeScript Testing Rules (Full): https://github.com/ggrablewski/claude-code-tools/blob/main/rules/typescript-testing.md
+- gg-marketplace: https://github.com/ggrablewski/claude-code-tools
+- Project-specific docs: [Add link if applicable]
+
+---
+
+**Note:** This file is automatically loaded by Claude Code at the start of each session. Update it whenever project guidelines change.

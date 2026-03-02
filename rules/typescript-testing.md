@@ -130,15 +130,15 @@ describe('UserController', () => {
 
 ```typescript
 it('should return 404 when user is not found', async () => {
-  // Given
+  // given
   const userId = '123';
   mockRequest.params = { id: userId };
   userService.findUser.mockResolvedValue(null);
 
-  // When
+  // when
   await userController.getUser(mockRequest as Request, mockResponse as Response);
 
-  // Then
+  // then
   expect(userService.findUser).toHaveBeenCalledWith(userId);
   expect(mockResponse.status).toHaveBeenCalledWith(404);
   expect(mockResponse.json).toHaveBeenCalledWith({
@@ -196,13 +196,13 @@ describe('PaymentService', () => {
   });
 
   it('should process payment successfully', () => {
-    // Given
+    // given
     paymentGateway.charge.mockResolvedValue({ success: true });
 
-    // When
+    // when
     const result = await processPayment(100);
 
-    // Then
+    // then
     expect(paymentGateway.charge).toHaveBeenCalledWith(100);
     expect(result.success).toBe(true);
   });
@@ -221,25 +221,25 @@ describe('PaymentService', () => {
 ✅ **Good:**
 ```typescript
 it('should fetch user data from API', async () => {
-  // Given
+  // given
   const userId = '123';
   const expectedUser = { id: userId, name: 'John' };
   mockApiClient.get.mockResolvedValue(expectedUser);
 
-  // When
+  // when
   const user = await userService.fetchUser(userId);
 
-  // Then
+  // then
   expect(user).toEqual(expectedUser);
   expect(mockApiClient.get).toHaveBeenCalledWith(`/users/${userId}`);
 });
 
 it('should handle API errors gracefully', async () => {
-  // Given
+  // given
   const error = new Error('Network error');
   mockApiClient.get.mockRejectedValue(error);
 
-  // When & Then
+  // when & then
   await expect(userService.fetchUser('123')).rejects.toThrow('Network error');
 });
 ```
@@ -290,13 +290,13 @@ describe('User operations', () => {
   });
 
   it('should update user name', () => {
-    // Given
+    // given
     const newName = 'Jane';
 
-    // When
+    // when
     updateUser(testUser.id, { name: newName });
 
-    // Then
+    // then
     expect(testUser.name).toBe(newName);
   });
 });
@@ -324,7 +324,7 @@ describe('UserService', () => {
   });
 
   it('should create a user with proper type', async () => {
-    // Given
+    // given
     const input: UserCreateInput = {
       name: 'John Doe',
       email: 'john@example.com',
@@ -339,10 +339,10 @@ describe('UserService', () => {
 
     mockRepository.save.mockResolvedValue(expectedUser);
 
-    // When
+    // when
     const result: User = await userService.createUser(input);
 
-    // Then
+    // then
     expect(result).toEqual(expectedUser);
     expect(mockRepository.save).toHaveBeenCalledWith(input);
   });
@@ -374,26 +374,26 @@ export const createTestAdmin = (overrides?: Partial<User>): User =>
 // In tests
 describe('UserPermissions', () => {
   it('should allow admin to delete users', () => {
-    // Given
+    // given
     const admin = createTestAdmin();
     const targetUser = createTestUser({ id: '456' });
 
-    // When
+    // when
     const canDelete = checkPermission(admin, 'delete', targetUser);
 
-    // Then
+    // then
     expect(canDelete).toBe(true);
   });
 
   it('should deny regular user from deleting other users', () => {
-    // Given
+    // given
     const regularUser = createTestUser();
     const targetUser = createTestUser({ id: '456' });
 
-    // When
+    // when
     const canDelete = checkPermission(regularUser, 'delete', targetUser);
 
-    // Then
+    // then
     expect(canDelete).toBe(false);
   });
 });
@@ -429,46 +429,46 @@ describe('UserPermissions', () => {
 describe('UserValidator', () => {
   describe('validateEmail', () => {
     it('should return true for valid email', () => {
-      // Given
+      // given
       const validEmail = 'user@example.com';
 
-      // When
+      // when
       const result = validateEmail(validEmail);
 
-      // Then
+      // then
       expect(result).toBe(true);
     });
 
     it('should return false for email without @', () => {
-      // Given
+      // given
       const invalidEmail = 'userexample.com';
 
-      // When
+      // when
       const result = validateEmail(invalidEmail);
 
-      // Then
+      // then
       expect(result).toBe(false);
     });
 
     it('should return false for email without domain', () => {
-      // Given
+      // given
       const invalidEmail = 'user@';
 
-      // When
+      // when
       const result = validateEmail(invalidEmail);
 
-      // Then
+      // then
       expect(result).toBe(false);
     });
 
     it('should return false for empty string', () => {
-      // Given
+      // given
       const emptyEmail = '';
 
-      // When
+      // when
       const result = validateEmail(emptyEmail);
 
-      // Then
+      // then
       expect(result).toBe(false);
     });
   });
@@ -551,10 +551,10 @@ it('should validate email format', () => {
 ✅ **Good:**
 ```typescript
 it('should reject user creation with invalid email', () => {
-  // Given
+  // given
   const invalidUser = { name: 'John', email: 'invalid-email' };
 
-  // When & Then
+  // when & then
   expect(() => userService.createUser(invalidUser)).toThrow('Invalid email');
 });
 ```
@@ -563,27 +563,27 @@ it('should reject user creation with invalid email', () => {
 
 ```typescript
 it('should call callback with success result', (done) => {
-  // Given
+  // given
   const callback = jest.fn((error, result) => {
-    // Then
+    // then
     expect(error).toBeNull();
     expect(result).toEqual({ success: true });
     done();
   });
 
-  // When
+  // when
   processAsync(callback);
 });
 
 // Or with async/await (preferred)
 it('should call callback with success result', async () => {
-  // Given
+  // given
   const callback = jest.fn();
 
-  // When
+  // when
   await processAsync(callback);
 
-  // Then
+  // then
   expect(callback).toHaveBeenCalledWith(null, { success: true });
 });
 ```
@@ -601,13 +601,13 @@ describe('RetryService', () => {
   });
 
   it('should retry after delay', () => {
-    // Given
+    // given
     const mockFn = jest.fn();
 
-    // When
+    // when
     scheduleRetry(mockFn, 1000);
 
-    // Then
+    // then
     expect(mockFn).not.toHaveBeenCalled();
 
     jest.advanceTimersByTime(1000);

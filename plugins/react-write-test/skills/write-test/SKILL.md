@@ -160,6 +160,220 @@ Configure VS Code for inline test running:
 }
 ```
 
+## TypeScript Testing Rules (CRITICAL)
+
+When writing tests in TypeScript, follow these mandatory rules:
+
+### 1. Test Organization with `describe` Blocks
+
+**RULE:** Group tests for one functionality in a single `describe` block.
+
+```typescript
+describe('UserService', () => {
+  describe('createUser', () => {
+    it('should create a new user with valid data', () => {});
+    it('should throw an error when email is invalid', () => {});
+  });
+
+  describe('deleteUser', () => {
+    it('should delete an existing user', () => {});
+  });
+});
+```
+
+### 2. One Test Case Per `it` Block
+
+**RULE:** Each `it` block must test exactly ONE specific behavior.
+
+### 3. Setup in `beforeEach`
+
+**RULE:** ALL imports, providers, mocks, and common test data MUST be initialized in `beforeEach` hooks.
+
+```typescript
+describe('UserController', () => {
+  let userController: UserController;
+  let mockService: jest.Mocked<UserService>;
+  let mockRequest: Partial<Request>;
+  let mockResponse: Partial<Response>;
+
+  beforeEach(() => {
+    // Setup mocks
+    mockService = {
+      findUser: jest.fn(),
+      createUser: jest.fn(),
+    } as jest.Mocked<UserService>;
+
+    // Setup common objects
+    mockRequest = { body: {}, params: {} };
+    mockResponse = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn().mockReturnThis(),
+    };
+
+    // Initialize system under test
+    userController = new UserController(mockService);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+});
+```
+
+### 4. Given-When-Then Pattern (MANDATORY)
+
+**RULE:** EVERY test MUST use the Given-When-Then pattern with explicit `// Given`, `// When`, `// Then` comments.
+
+```typescript
+it('should return 404 when user is not found', async () => {
+  // Given
+  const userId = '123';
+  mockRequest.params = { id: userId };
+  mockService.findUser.mockResolvedValue(null);
+
+  // When
+  await userController.getUser(mockRequest as Request, mockResponse as Response);
+
+  // Then
+  expect(mockService.findUser).toHaveBeenCalledWith(userId);
+  expect(mockResponse.status).toHaveBeenCalledWith(404);
+  expect(mockResponse.json).toHaveBeenCalledWith({ error: 'User not found' });
+});
+```
+
+**Pattern Breakdown:**
+- **// Given** - Set up test data, mocks, and preconditions
+- **// When** - Execute the action being tested
+- **// Then** - Assert the expected outcomes
+
+### 5. Test Naming Convention
+
+**RULE:** Format: `should [expected behavior] when [condition]`
+
+✅ Good:
+- `should return user data when user exists`
+- `should throw ValidationError when email is invalid`
+
+❌ Bad:
+- `works`
+- `test user`
+- `handles errors`
+
+### 6. Mock Management
+
+**RULE:** Always clean up mocks in `afterEach` to prevent test pollution.
+
+```typescript
+afterEach(() => {
+  jest.clearAllMocks(); // Clear mock call history
+});
+```
+
+### 7. Async/Await Handling
+
+**RULE:** Always use `async/await` for asynchronous tests.
+
+```typescript
+it('should fetch user data from API', async () => {
+  // Given
+  const userId = '123';
+  mockApiClient.get.mockResolvedValue({ id: userId, name: 'John' });
+
+  // When
+  const user = await userService.fetchUser(userId);
+
+  // Then
+  expect(user.name).toBe('John');
+});
+
+it('should handle API errors gracefully', async () => {
+  // Given
+  mockApiClient.get.mockRejectedValue(new Error('Network error'));
+
+  // When & Then
+  await expect(userService.fetchUser('123')).rejects.toThrow('Network error');
+});
+```
+
+### 8. Type Safety in Tests
+
+**RULE:** Use proper TypeScript types in tests, including for mocks and test data.
+
+```typescript
+import { User, UserCreateInput, UserService } from './user.service';
+
+describe('UserService', () => {
+  let userService: UserService;
+  let mockRepository: jest.Mocked<UserRepository>;
+
+  beforeEach(() => {
+    mockRepository = {
+      save: jest.fn(),
+      findById: jest.fn(),
+    } as jest.Mocked<UserRepository>;
+
+    userService = new UserService(mockRepository);
+  });
+
+  it('should create a user with proper types', async () => {
+    // Given
+    const input: UserCreateInput = {
+      name: 'John Doe',
+      email: 'john@example.com',
+    };
+
+    const expectedUser: User = {
+      id: '123',
+      ...input,
+      createdAt: new Date(),
+    };
+
+    mockRepository.save.mockResolvedValue(expectedUser);
+
+    // When
+    const result: User = await userService.createUser(input);
+
+    // Then
+    expect(result).toEqual(expectedUser);
+  });
+});
+```
+
+### 9. Test Isolation
+
+**RULE:** Each test must be independent and not rely on state from other tests.
+
+✅ Good: Each test gets fresh data via `beforeEach`
+❌ Bad: Tests share variables and depend on execution order
+
+### 10. Test Data Builders
+
+**RULE:** Use factory functions for complex test data.
+
+```typescript
+// test-helpers/user.factory.ts
+export const createTestUser = (overrides?: Partial<User>): User => ({
+  id: '123',
+  name: 'John Doe',
+  email: 'john@example.com',
+  role: 'user',
+  ...overrides,
+});
+
+// In tests
+it('should allow admin to delete users', () => {
+  // Given
+  const admin = createTestUser({ role: 'admin' });
+  const targetUser = createTestUser({ id: '456' });
+
+  // When
+  const canDelete = checkPermission(admin, 'delete', targetUser);
+
+  // Then
+  expect(canDelete).toBe(true);
+});
+```
+
 ## Best Practices
 
 ### DO:
@@ -170,6 +384,9 @@ Configure VS Code for inline test running:
 - ✅ Test accessibility attributes and roles
 - ✅ Cover edge cases and error states
 - ✅ Keep tests simple and focused on one thing
+- ✅ **ALWAYS use Given-When-Then comments in every test**
+- ✅ **Initialize all mocks and data in beforeEach**
+- ✅ **Group related tests in describe blocks**
 
 ### DON'T:
 - ❌ Test implementation details (internal state, method names)
@@ -178,6 +395,9 @@ Configure VS Code for inline test running:
 - ❌ Write tests that depend on each other
 - ❌ Mock everything - only mock external dependencies
 - ❌ Ignore TypeScript types in test files (if using TypeScript)
+- ❌ **Skip Given-When-Then comments**
+- ❌ **Setup test data outside beforeEach**
+- ❌ **Test multiple behaviors in one `it` block**
 
 ## Example: Complete Component Test
 
