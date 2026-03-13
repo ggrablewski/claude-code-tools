@@ -18,6 +18,18 @@
       "source": "./plugins/react-write-test",
       "category": "testing",
       "tags": ["react", "testing", "jest", "react-native"]
+    },
+    {
+      "name": "github-issues",
+      "description": "Commands to read GitHub issues from the current repository",
+      "version": "1.0.0",
+      "author": {
+        "name": "Grzegorz Grablewski",
+        "email": "ggrablewski@wp.pl"
+      },
+      "source": "./plugins/github-issues",
+      "category": "github",
+      "tags": ["github", "issues", "commands"]
     }
   ]
 }
