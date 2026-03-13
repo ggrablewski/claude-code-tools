@@ -1,0 +1,9 @@
+{
+  "name": "github-issues",
+  "version": "1.0.0",
+  "description": "Commands to read GitHub issues from the current repository",
+  "author": {
+    "name": "Grzegorz Grablewski",
+    "email": "ggrablewski@wp.pl"
+  }
+}
