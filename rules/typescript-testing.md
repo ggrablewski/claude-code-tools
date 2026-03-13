@@ -1,6 +1,6 @@
 # TypeScript Testing Rules
 
-Best practices and coding standards for writing tests in TypeScript with Jest.
+Best practices and coding standards for writing tests in TypeScript or in JavaScript with Jest.
 
 ## Core Principles
 
@@ -302,7 +302,7 @@ describe('User operations', () => {
 });
 ```
 
-### 9. Type Safety in Tests
+### 9. Type Safety in TestScript Tests
 
 **Rule:** Use proper TypeScript types in tests, including for mocks and test data.
 
